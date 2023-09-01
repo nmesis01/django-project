@@ -1,0 +1,131 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% block header %}
+        <link rel="stylesheet" href="{% static 'home/oxford.css' %}">
+        <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>        <script src="{% static 'home/oxford.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<a id="button" style='text-decoration:none'></a>
+    <div class="container">
+        <div class="row mt-1">
+            <div class="col-sm-1 col-md-3"></div>
+            <div class="col">
+              <form method='POST' >
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <input type="text" name='word_input' id="word_input" class="form-control" placeholder="Word" value="{{search_word}}" style="text-align:center" aria-label="Word" aria-describedby="button-addon2">
+                    <button type="submit" name="add" id="button-addon2" class="btn btn-outline-success">Add</button>
+                </div>
+              </form>
+            </div>
+            <div class="col-sm-1 col-md-3"></div>
+        </div>
+        <div class="row">
+          <form action="" method='GET'>
+          <div class="accordion" id="accordionExample">
+          {% if words %}
+          {% for word,result in words.items%}
+          <div class="accordion-item" id="{{word}}_{{result.tag}}-accordion">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{word}}_{{result.tag}}" aria-expanded="false" aria-controls="{{word}}_{{result.tag}}">
+                <h4>{{word}}</h4>&nbsp;<sub><i>({{result.tag}})</i><sub>
+                </sub></sub></button>
+              </h2>
+              {% if edit_word == word and edit_tag == result.tag  %}
+              <div id="{{word}}_{{result.tag}}" class="accordion-collapse collapse show" aria-labelledby="{{word}}_{{result.tag}}" data-bs-parent="#accordionExample" style="">
+              {% else %}
+              <div id="{{word}}_{{result.tag}}" class="accordion-collapse collapse" aria-labelledby="{{word}}_{{result.tag}}" data-bs-parent="#accordionExample" style="">
+              {% endif %}
+                <div class="accordion-body">
+            {% for a,b in result.items %}
+                    {% for x,y in b.items %}
+                        {% if edit_word == word and edit_tag == result.tag%}
+                          <div class="w-auto p-0"><div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="definitions[]" value="{{y.id}}" id="{{y.id}}check">
+                            <label class="form-check-label" for="{{y.id}}check"><strong>{{x}}</strong></label></div></div>
+                            {% for m,n in y.items %}
+                              {% for k,l in n.items %}
+                              <div class="row"><div class="ms-2"><div class="form-check p-0">
+                                <label class="form-check-label" style="float:left;width:95%" for="ex{{l.id}}">{{k}}</label><input class="form-check-input" style="float:right" type="checkbox" name="examples[]" value="{{l.id}}" id="ex{{l.id}}"></div></div></div>              
+                              {% endfor %}
+                              {% endfor %}
+                        {% else %}    
+                            <div class="row"><strong>{{x}}</strong></div>
+                              {% for m in y.examples %}
+                              <div class="row"><div class="ms-2">-{{m}}</div></div>
+                              {% endfor %}
+                        {% endif %}
+                  {% endfor %}  
+                {% endfor %}
+              </div>
+              <div class="row">
+                {% if edit_word == word and edit_tag == result.tag %}
+                <div style="text-align:left" class="col-3"><button style="color:green" type="submit" class="btn" name="update" value="{{word}}_{{result.tag}}">Update</button></div>                
+                {% else %}
+                <div style="text-align:left;" class="col-3"><button style="color:green" type="submit" class="btn" name="edit" value="{{word}}_{{result.tag}}">Edit</button></div>
+                {% endif %}
+              <div style="text-align:center;" class="col-6"><button style="color:blue" type="submit" class="btn getsimilar" name='similar' value="{{word}}_{{result.tag}}">Similar Words</button></div>
+              <div style="text-align:right;" class="col-3"><button style="color:red" type="submit" class="btn" name="delete" value="{{word}}_{{result.tag}}">Delete</button></div>
+            </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      </div>
+    </form>
+      </div>
+        <br>
+        <br>
+        <br>
+<script>
+  document.getElementById("{{edit_word}}_{{edit_tag}}").scrollIntoView();
+</script>
+{% if suggest_word %}
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header"><h1 class="modal-title fs-5" id="exampleModalLabel">Did you mean:</h1><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                <div id='modalbody' class="modal-body text-center">
+              <div class="list-group">
+                {% for x in suggest_word %}
+                <a class="list-group-item list-group-item-action list-group-item-light" href="?search={{x}}">{{x}}</a>
+                {% endfor %}
+            </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      $(document).ready(function(){
+        $('#exampleModal').modal('show');
+      })
+    </script>
+{% endif %}
+{% if similar_word %}
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header"><h1 class="modal-title fs-5" id="exampleModalLabel">Did you mean:</h1><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                <div id='modalbody' class="modal-body text-center">
+              <div class="list-group">
+                {% for x,y in similar_word.items %}
+                <a class="list-group-item list-group-item-action list-group-item-light" href="?find={{y.label}}"><strong>{{y.word}}</strong><i>{{y.tag}}</i></a>
+                {% endfor %}
+            </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      $(document).ready(function(){
+        $('#exampleModal').modal('show');
+      })
+    </script>
+{% endif %}
+{% endblock %}

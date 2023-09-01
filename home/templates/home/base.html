@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BLOG</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="logo.ico" type="image/x-icon" />
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+    <link rel="stylesheet" href="{% static 'home/index.css' %}">
+    <script src="https://kit.fontawesome.com/e48dcdba45.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+{% block header %}{% endblock %}
+</head>
+<body class="bg-light">
+    <div class="container-fluid m-0 p-0">
+        <div class="row m-0 p-0">
+            <div class="col m-0 p-0">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-warning" style="border-bottom-left-radius: 22px; border-bottom-right-radius: 22px;">
+                    <div class="container-fluid">
+                      <a class="navbar-brand" href="{% url 'home' %}"><h1 class="h1">Learn</h1></a>
+                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
+                        <div class="navbar-nav">
+                          <a class="nav-link" id="homepage" aria-current="page" href="{% url 'home' %}">Home</a>
+                          <a class="nav-link" id="betapage" href="{% url 'oxford' %}">Oxford Dictionary</a>
+                        </div>
+                      </div>
+                    </div>
+                    <form class="container-fluid justify-content-end">
+                      {% if user.id %}
+                      <a href="{% url 'logout' %}"><button class="btn btn-outline-dark" type="button">Log Out</button></a>
+                      {% else %}
+                      <div class="btn-group-vertical-sm">
+                        <a href="{% url 'login' %}"><button class="btn btn-outline-primary" type="button">Login</button></a>
+                        <a href="{% url 'register' %}"><button class="btn btn-outline-success" type="button">Sign Up</button></a>
+                      </div>
+                      {% endif %}
+                    </form>
+                  </nav>
+            </div>
+        </div>
+        {% if messages %}
+          {% for message in messages  %}
+          <script>
+            alert("{{message}}");
+          </script>
+          <div class="alert alert-{{message.tags}} pt-3" role="alert">{{message}}</div>
+          {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+</body>
