@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>BLOG</title>
+    <title>{% block title%}{% endblock %}</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="logo.ico" type="image/x-icon" />
+    <link rel="icon" href="{% static 'home/logo.ico'%}" type="image/x-icon" />
     <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
     <link rel="stylesheet" href="{% static 'home/index.css' %}">
     <script src="https://kit.fontawesome.com/e48dcdba45.js" crossorigin="anonymous"></script>
