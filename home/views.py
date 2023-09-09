@@ -28,7 +28,7 @@ def oxford(request):
                         def_dict.update({m.definition:{"id":m.id,"examples":example_dict}})
                 else:
                     def_dict.update({m.definition:{"id":0,"examples":{}}})
-            words_list.update({parsed[0]:{"tag":parsed[1],"definitions":def_dict}})
+            words_list.update({i.word:{"word":parsed[0],"tag":parsed[1],"definitions":def_dict}})
         content.update({"words":words_list,"definitions_id":definitions_id,"examples_id":examples_id})
         return render(request,"home/oxford.html",context=content)
     #search method
