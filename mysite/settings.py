@@ -78,14 +78,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'oxford-db',
-        'USER': 'postgres',
-        'PASSWORD': "96374185",
-        'HOST': 'localhost',
-        'PORT': '5432'
-    }
+   #todo
 
 }
 
